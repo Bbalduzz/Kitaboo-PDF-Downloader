@@ -30,8 +30,6 @@ def download_and_create():
         with open(f'pages/page{n:04d}.svg', 'wb') as f:
             f.write(page_data)
         progress_bar(n+1, npages)
-        if n > 7:
-            break
         drawing = svg2rlg(f"pages/page{n:04d}.svg")
         renderPDF.drawToFile(drawing, f"pdfs/page{n:04d}.pdf")
 
