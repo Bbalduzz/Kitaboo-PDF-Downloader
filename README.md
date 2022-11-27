@@ -6,8 +6,7 @@ Simple (and a bit slow) script to downlaod high quality pdf from kitaboo web rea
 - install required imports
    - `pip install requests`
    - `pip install bs4`
-   - `pip install svglib`
-   - `pip install reportlab`
+   - `pip install cairosvg`
    - `pip install natsorted`
 - run `python3/py zncDL.py`
 
