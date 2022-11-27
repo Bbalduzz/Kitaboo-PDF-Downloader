@@ -1,5 +1,5 @@
 # Kitaboo-PDF-Downloader
-Simple (and a bit slow) script to downlaod high quality pdf from kitaboo web reader. 
+Simple script to downlaod high quality pdf from kitaboo web reader. 
 ### 📝 How to use
 - install python [https://www.python.org/downloads/]
    - install pip or pip3
