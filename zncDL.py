@@ -1,7 +1,20 @@
-import requests, os, shutil
+import requests, os, shutil, json
 from bs4 import BeautifulSoup
 from natsort import natsorted
 import cairosvg
+import fitz
+
+'''
+HOW TO USE:
+    - open the book in zanichelli reader
+    - inspect the page
+    - find toc.xml and get the cookie ('copy value' is fine)
+    - save what u just copied into "cookies.txt"
+    - search content.opf and copy the url from the inspect element console
+    - run the script
+    - paste the url
+    - wait ;)
+'''
 
 try:
     os.mkdir('pages')
@@ -11,7 +24,16 @@ except:
 
 with open('cookies.txt', 'r') as f: cookie = f.readline()
 COOKIE = {'Cookie': cookie}
-BASE_URL = input('[+] Enter book URL (search toc.xml): \n')
+BASE_URL = input('[+] Enter book URL (search toc.xml): \n').removesuffix('/toc.xml')
+
+def get_library():
+    lib_req = requests.get('https://api-catalogo.zanichelli.it/v3/dashboard/licenses/real', headers=COOKIE).json()
+    for book in lib_req['realLicenses']:
+        meta = book['volume']
+        isbn = meta['isbn']
+        title = meta['opera']['title']+meta['title']
+        webreader_url = meta['ereader_url']
+
 
 def progress_bar(progress, total):
     percent = 100 * (progress / float(total))
@@ -25,6 +47,25 @@ book_title = soup.find('dc:title').text
 book_desc = soup.find('dc:description').text
 book_author = soup.find('dc:author').text
 book_isbn = soup.find('dc:identifier').text.split(':')[2]
+
+data = requests.get(f'{BASE_URL}/toc.xhtml', headers=COOKIE).content
+soup = BeautifulSoup(data, 'html.parser')
+ol  = soup.find('ol')
+def dictify(ol):
+    result = {}
+    for li in ol.find_all("li", recursive=False):
+        page = int(li.a['href'][5:-6])
+        key = next(li.stripped_strings)
+        result[key] = [page, dictify(li.find("ol")) if li.find("ol") else None]
+    return result
+
+def tocify(toc_dict):
+    toc = []
+    for key, value in toc_dict.items():
+        toc.append([1, key, value[0]])
+        if value[1]:
+            toc.extend([2, sub_key, sub_value[0]] for sub_key, sub_value in value[1].items())
+    return toc
 
 def download_and_create():
     progress_bar(0, npages)
@@ -44,6 +85,12 @@ def merge_pdfs():
         merger.append(open(f'pdfs/{pdf}', 'rb'))
     with open(f'{book_title}.pdf', 'wb') as book_pdf:
         merger.write(book_pdf)
+    pdf = fitz.Document(f'{book_title}.pdf')
+    pdf.set_toc(tocify(dictify(ol)))
+    pdf.save(f'{book_title}_.pdf')
+
+def help():
+    print(__name__.__doc__)
 
 print(f'''
 [+] Book Found:
@@ -53,7 +100,6 @@ print(f'''
     - isbn: {book_isbn}
     - pages: {npages}
 ''')
-
 download_and_create()
 merge_pdfs()
 shutil.rmtree('pages')
