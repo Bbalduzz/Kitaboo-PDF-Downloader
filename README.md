@@ -10,4 +10,4 @@ Simple script to downlaod high quality pdf from kitaboo web reader.
 - run `python3/py zncDL.py`
 
 #### Demo Video
-https://user-images.githubusercontent.com/81587335/213545642-69435c67-6611-456e-8e37-527a2c22d980.mov
+https://github.com/Bbalduzz/Kitaboo-PDF-Downloader/assets/81587335/cd2f3bdd-0cbb-4f0e-a1f9-06d2de7968eb)https://github.com/Bbalduzz/Kitaboo-PDF-Downloader/assets/81587335/cd2f3bdd-0cbb-4f0e-a1f9-06d2de7968eb
