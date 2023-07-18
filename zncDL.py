@@ -14,23 +14,17 @@ HOW TO USE:
     - wait ;)
 '''
 
-def parse_cookies(cookie_string):
+def parse_cookie(cookie_string):
     keys = ["CloudFront-Policy", "CloudFront-Signature", "CloudFront-Key-Pair-Id", "myz_session", "token", "myz_token", "lastVisitedHosts"]
-    cookie_dict = {key: None for key in keys}
-    cookies = cookie_string.split("; ")
-    for cookie in cookies:
-        key_value = cookie.split("=", 1)
-        if key_value[0] in keys:
-            try:
-                cookie_dict[key_value[0]] = json.loads(key_value[1])
-            except json.JSONDecodeError:
-                cookie_dict[key_value[0]] = key_value[1]
-                
-    return cookie_dict
+    result = []
+    for key in keys:
+        pattern = f'{key}=([^;]*)'
+        if match := re.search(pattern, cookie_string):
+            result.append(f'{key}={match[1]}')
+    return '; '.join(result)
 
 with open('cookies.txt', 'r') as f: cookie = f.readline()
-cookie = parse_cookies(cookie)
-COOKIE = {'Cookie': cookie}
+COOKIE = {'Cookie': parse_cookies(cookie)}
 SESSION = requests.Session()
 SESSION.headers.update(COOKIE)
 BASE_URL = input('[+] Enter book URL (search toc.xml): \n').removesuffix('/toc.xml')
