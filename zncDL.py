@@ -24,7 +24,7 @@ def parse_cookie(cookie_string):
     return '; '.join(result)
 
 with open('cookies.txt', 'r') as f: cookie = f.readline()
-COOKIE = {'Cookie': parse_cookies(cookie)}
+COOKIE = {'Cookie': parse_cookie(cookie)}
 SESSION = requests.Session()
 SESSION.headers.update(COOKIE)
 BASE_URL = input('[+] Enter book URL (search toc.xml): \n').removesuffix('/toc.xml')
