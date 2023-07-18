@@ -1,4 +1,4 @@
-import requests, os, shutil, json
+import requests, os, shutil, json, re
 from bs4 import BeautifulSoup
 import fitz
 
