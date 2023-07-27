@@ -6,7 +6,7 @@ Simple script to downlaod high quality pdf from kitaboo web reader.
 - install required imports
    - `pip install requests`
    - `pip install bs4`
-   - `pip install PyMuPDF`
+   - `pip install fitz`
 - run `python3/py zncDL.py`
 
 #### Demo Video
