@@ -33,7 +33,7 @@ class Znc:
 
     @staticmethod
     def parse_cookies():
-        with open('cookies.txt', 'r') as f: cookie_string = f.readline()
+        with open('cookies.txt', 'r') as f: cookie_string = f.readline().strip()
         keys = ["CloudFront-Policy", "CloudFront-Signature", "CloudFront-Key-Pair-Id", "myz_session", "token", "myz_token", "lastVisitedHosts"]
         result = []
         for key in keys:
